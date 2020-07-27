@@ -3,4 +3,5 @@ option explicit
 dim startdate
 dim enddate
 
-startdate
+startdate = inputbox("aaa")
+enddate = inputbox("bbb")
