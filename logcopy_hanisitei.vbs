@@ -1,28 +1,20 @@
-Option explicit
+Option Explicit
 
-Dim startdate
-Dim enddate
+Dim startdate: startdate = inputbox("ログを採取する期間を入力してください")
+Dim enddate: enddate = inputbox("ログを採取する期間を入力してください")
 
-startdate = inputbox("ログを採取する期間を入力してください")
-enddate = inputbox("ログを採取する期間を入力してください")
-
-Dim objfilesys
+Dim objfilesys: objfilesys = CreateObject("Scripting.FileSystemObject")
 Dim objfolder
 Dim objfile 
 Dim objfiledate
-Dim objfs 
+Dim objfs: objfs = CreateObject("Scripting.FileSystemObject")
 
-Dim copyfrom
+Dim copyfrom: copyfrom = "C:\test\aaa"
 Dim copyfromfile
-Dim copyto
+Dim copyto: copyto = "C:\test\bbb"
 Dim copytofile
 
-copyfrom = "C:\test\aaa"
-copyto = "C:\test\bbb"
-
-set objfilesys = CreateObject("scripting.filesystemobject")
-set objfolder = objfilesys.getfolder(copyfrom)
-set objfs = createobject("scripting.filesystemobject")
+set objfolder = objfilesys.GetFolder(copyfrom)
 
 for each objfile in objfolder.files 
     objfiledate = mid(objfile.name, 14, 8)
