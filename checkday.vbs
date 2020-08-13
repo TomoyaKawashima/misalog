@@ -1,37 +1,40 @@
 Option Explicit
 
-Dim StartDate, EndDate, CorrectFormatRes, CorrectStartDateRes, CorrectEndDateRes, ValidPeriodRes
+Sub main()
+    Dim StartDate, EndDate
+    Dim Res: Res = 0
+    If WScript.Arguments.Count <> 2 then
+        MsgBox "Please set two days."
+        WScript.Quit(-1)
+    End If
+    StartDate = WScript.Arguments(0)
+    EndDate = WScript.Arguments(1)
+    Res = IsValidInput(StartDate, EndDate)
+    Res = IsCorrectFormat(StartDate, EndDate)
+    Res = IsCorrectDate(StartDate)
+    Res = IsCorrectDate(EndDate)
+    Res = IsValidPeriod(StartDate, EndDate)
+    Res = IsLimit(StartDate, EndDate)
+    WScript.Echo(ValidPeriodRes)
+End Sub
 
-If WScript.Arguments.Count <> 2 then
-    MsgBox "Please set two days."
-    WScript.Quit(-1)
-End If
-StartDate = WScript.Arguments(0)
-EndDate = WScript.Arguments(1)
-
-CorrectFormatRes = IsCorrectFormat(StartDate, EndDate)
-CorrectStartDateRes = IsCorrectDate(StartDate)
-CorrectEndDateRes = IsCorrectDate(EndDate)
-ValidPeriodRes = IsValidPeriod(StartDate, EndDate)
-WScript.Echo(ValidPeriodRes)
-
+' 始めと終わりの日付が数字で入力されているか
 Function IsValidInput(Byval SDate1, EDate1)
     If IsNumeric(StartDate) = False Or IsNumeric(EndDate) = False Then
         MsgBox "This input isn't Numeric."
     End If
 End Function
 
+' 入力フォーマットが正しいか
 Function IsCorrectFormat(ByVal SDate2, ByVal EDate2)
     IsCorrectFormat = True
     Dim InputLen: InputLen = 8 
     If Len(SDate2) <> ByteLen(SDate2) Or Len(EDate2) <> ByteLen(EDate2) Then
         MsgBox "Incorrect format."
-        ' WScript.Quit(-1)
         IsCorrectFormat = False
     End If
     If Len(SDate2) <> InputLen Or Len(EDate2) <> InputLen Then
         MsgBox "Incorrect format."
-        ' WScript.Quit(-1)
         IsCorrectFormat = False
     End If
 End Function
@@ -51,6 +54,7 @@ Function ByteLen(ByVal StrVal)
     End If
 End Function
 
+' 日付が存在するか
 Function IsCorrectDate(ByVal InputDate)
     Dim Re, Mc
     IsCorrectDate = True
@@ -62,6 +66,7 @@ Function IsCorrectDate(ByVal InputDate)
     End If
 End Function
 
+' 終わりの日付が始めの日付より後ろの日付になっているか
 Function IsValidPeriod(Byval SDate3, Byval EDate3)
     IsValidPeriod = True
     If (EDate3 - SDate3) < 0 Then
@@ -69,3 +74,21 @@ Function IsValidPeriod(Byval SDate3, Byval EDate3)
         IsValidPeriod = False 
     End If 
 End Function
+
+' 取り出せる期間に収まっているか
+Function IsLimit(ByVal SDate4, ByVal EDate4)
+    IsLimit = True
+    Dim LimitMonth: LimitMonth = 3
+    Dim CheckDate, LimitDate, NewDate
+    CheckDate = Mid(SDate4, 1, 4) & "/" & Mid(SDate4, 5, 2) & "/" & Mid(SDate4, 7, 2)
+    LimitDate = DateAdd("m", LimitMonth, CheckDate)
+    LimitDate = Replace(LimitDate, "/", "")
+    If(LimitDate - EDate4 < 0) Then
+        MsgBox "Out of bound."
+        IsLimit = False
+    End If 
+End Function
+    
+    
+
+
