@@ -1,27 +1,37 @@
 Option Explicit
 
+main()
+
 Sub main()
-    Dim StartDate, EndDate
-    Dim Res: Res = 0
+    Dim StartDate, EndDate, Arr, item, str
+    Dim ErrorFlag: ErrorFlag = -1
     If WScript.Arguments.Count <> 2 then
         MsgBox "Please set two days."
         WScript.Quit(-1)
     End If
     StartDate = WScript.Arguments(0)
     EndDate = WScript.Arguments(1)
-    Res = IsValidInput(StartDate, EndDate)
-    Res = IsCorrectFormat(StartDate, EndDate)
-    Res = IsCorrectDate(StartDate)
-    Res = IsCorrectDate(EndDate)
-    Res = IsValidPeriod(StartDate, EndDate)
-    Res = IsLimit(StartDate, EndDate)
-    WScript.Echo(ValidPeriodRes)
+    Set Arr = CreateObject("System.Collections.ArrayList")
+    Arr.add(IsValidInput(StartDate, EndDate))
+    Arr.add(IsCorrectFormat(StartDate, EndDate))
+    Arr.add(IsCorrectDate(StartDate))
+    Arr.add(IsCorrectDate(EndDate))
+    Arr.add(IsValidPeriod(StartDate, EndDate))
+    Arr.add(IsLimit(StartDate, EndDate))
+    WScript.Echo(Arr(1))
+    If Arr.Contains(-1) Then 
+        MsgBox "hoge"
+    Else
+        MsgBox "fuga"
+    End If
 End Sub
 
 ' 始めと終わりの日付が数字で入力されているか
 Function IsValidInput(Byval SDate1, EDate1)
-    If IsNumeric(StartDate) = False Or IsNumeric(EndDate) = False Then
-        MsgBox "This input isn't Numeric."
+    IsValidInput = True
+    If IsNumeric(SDate1) = False Or IsNumeric(EDate1) = False Then
+       ' MsgBox "This input isn't Numeric."
+       IsValidInput = False
     End If
 End Function
 
@@ -30,11 +40,11 @@ Function IsCorrectFormat(ByVal SDate2, ByVal EDate2)
     IsCorrectFormat = True
     Dim InputLen: InputLen = 8 
     If Len(SDate2) <> ByteLen(SDate2) Or Len(EDate2) <> ByteLen(EDate2) Then
-        MsgBox "Incorrect format."
+       ' MsgBox "Incorrect format."
         IsCorrectFormat = False
     End If
     If Len(SDate2) <> InputLen Or Len(EDate2) <> InputLen Then
-        MsgBox "Incorrect format."
+      '  MsgBox "Incorrect format."
         IsCorrectFormat = False
     End If
 End Function
@@ -70,7 +80,7 @@ End Function
 Function IsValidPeriod(Byval SDate3, Byval EDate3)
     IsValidPeriod = True
     If (EDate3 - SDate3) < 0 Then
-        MsgBox "Invalid period."
+        'MsgBox "Invalid period."
         IsValidPeriod = False 
     End If 
 End Function
@@ -84,7 +94,7 @@ Function IsLimit(ByVal SDate4, ByVal EDate4)
     LimitDate = DateAdd("m", LimitMonth, CheckDate)
     LimitDate = Replace(LimitDate, "/", "")
     If(LimitDate - EDate4 < 0) Then
-        MsgBox "Out of bound."
+      '  MsgBox "Out of bound."
         IsLimit = False
     End If 
 End Function
