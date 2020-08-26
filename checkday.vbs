@@ -31,13 +31,16 @@ main()
 
 Sub main()
     Dim StartDate, EndDate, Res
+    Dim LimitMonth: LimitMonth = 3
     Dim CallCount: CallCount = 0
     Dim ResObj
     Set ResObj = New CallCount
     If WScript.Arguments.Count <> 2 then
-        WScript.Echo("Please set two days.")
-        WScript.Quit(0)
+        ClsObj.Message = "Please set two days."
     End If
+
+    If IsNumeric(LimitMonth) = False Then
+        ClsObj.Message = "Please set LimitMonth."
 
     StartDate = WScript.Arguments(0)
     EndDate = WScript.Arguments(1)
@@ -51,7 +54,7 @@ Sub main()
     Call AfterProc(Res, ResObj.Counter)
     Res = IsValidPeriod(StartDate, EndDate)
     Call AfterProc(Res, ResObj.Counter)
-    Res = IsLimit(StartDate, EndDate)
+    Res = IsLimit(StartDate, EndDate, LimitMonth)
     Call AfterProc(Res, ResObj.Counter)
     WScript.Echo("success")
     Wscript.Quit(-1)
@@ -116,12 +119,11 @@ Function IsValidPeriod(Byval SDate4, Byval EDate4)
 End Function
 
 ' 取り出せる期間に収まっているか
-Function IsLimit(ByVal SDate5, ByVal EDate5)
+Function IsLimit(ByVal SDate5, ByVal EDate5, ByVal LMonth)
     IsLimit = True
-    Dim LimitMonth: LimitMonth = 3
     Dim CheckDate, LimitDate, NewDate
     CheckDate = Mid(SDate5, 1, 4) & "/" & Mid(SDate5, 5, 2) & "/" & Mid(SDate5, 7, 2)
-    LimitDate = DateAdd("m", LimitMonth, CheckDate)
+    LimitDate = DateAdd("m", LMonth, CheckDate)
     LimitDate = Replace(LimitDate, "/", "")
     If(LimitDate - EDate5 < 0) Then
         IsLimit = False
